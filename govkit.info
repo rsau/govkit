@@ -1,0 +1,70 @@
+screenshot  = screenshot.png
+name        = govKit
+description = A light-weight UI Kit 2 based theme derived from govkit
+
+core        = 7.x
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Regions
+;;;;;;;;;;;;;;;;;;;;;
+
+regions[header_menu]        = Header Menu
+regions[header]             = Header
+regions[navigation]         = Navigation bar
+regions[highlighted]        = Highlighted
+regions[help]               = Help
+regions[content]            = Content
+regions[sidebar_first]      = Sidebar left
+regions[sidebar_second]     = Sidebar right
+regions[footer_menu]        = Footer Menu
+regions[footer]             = Footer
+regions[page_top]           = Page top
+regions[page_bottom]        = Page bottom
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Settings
+;;;;;;;;;;;;;;;;;;;;;
+
+features[] = logo
+features[] = name
+features[] = slogan
+features[] = node_user_picture
+features[] = comment_user_picture
+features[] = favicon
+features[] = main_menu
+features[] = secondary_menu
+
+settings[govkit_skip_link_anchor] = main-content
+settings[govkit_skip_link_text]   = Skip to main content
+settings[govkit_rebuild_registry] = 0
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Javascript.
+;;;;;;;;;;;;;;;;;;;;;
+
+scripts[] = js/jquery-ui.min.js
+scripts[] = js/scripts.js
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Stylesheet.
+;;;;;;;;;;;;;;;;;;;;;
+
+stylesheets[all][] = css/styles.css
+stylesheets[print][] = css/print.css
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Excludes
+;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Plugins
+;;;;;;;;;;;;;;;;;;;;;
+
+plugins[panels][layouts] = panels-layouts
+
+; Breakpoints
+
+breakpoints[lg] = (min-width: 992px)
+breakpoints[md] = (min-width: 768px)
+breakpoints[sm] = (min-width: 576px)
+breakpoints[xs] = (min-width: 0px)

@@ -1,0 +1,127 @@
+{
+  "name": "govkit",
+  "author": "Icon Agency Canberra",
+  "description": "A light-weight UI Kit 2 based theme",
+  "version": "1.0.0",
+  "license": "ISC",
+  "repository": {},
+  "devDependencies": {
+    "@gov.au/pancake": "^1.0.6",
+    "@gov.au/pancake-sass": "^1.3.1",
+    "bootstrap-sass": "^3.3.7",
+    "cssnano": "^3.10.0",
+    "del": "^2.2.2",
+    "fs": "0.0.1-security",
+    "gulp": "^3.9.1",
+    "gulp-buffer": "^0.0.2",
+    "gulp-casperjs": "0.0.7",
+    "gulp-clean-css": "^3.9.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-extract-media-queries": "^1.1.0",
+    "gulp-group-css-media-queries": "^1.2.2",
+    "gulp-iconfont": "^9.0.2",
+    "gulp-iconfont-css": "^2.1.0",
+    "gulp-iconfont-template": "0.0.3",
+    "gulp-imagemin": "^4.0.0",
+    "gulp-jshint": "^2.0.4",
+    "gulp-load-plugins": "^1.2.4",
+    "gulp-modernizr": "^1.0.0-alpha",
+    "gulp-pa11y": "0.0.4",
+    "gulp-plumber": "^1.1.0",
+    "gulp-postcss": "^7.0.0",
+    "gulp-real-favicon": "^0.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-size": "^3.0.0",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-uglify": "^3.0.0",
+    "gulp-util": "^3.0.8",
+    "gulp-w3c-html-validation": "0.0.1",
+    "jquery": "^3.2.1",
+    "jshint": "^2.9.5",
+    "postcss-import": "^11.0.0",
+    "run-sequence": "^2.2.1"
+  },
+  "dependencies": {
+    "@gov.au/accordion": "^5.0.0",
+    "@gov.au/animate": "^1.0.0",
+    "@gov.au/body": "^2.0.2",
+    "@gov.au/breadcrumbs": "^2.0.1",
+    "@gov.au/buttons": "^3.0.2",
+    "@gov.au/callout": "^2.0.1",
+    "@gov.au/control-input": "^2.0.2",
+    "@gov.au/core": "^3.0.1",
+    "@gov.au/cta-link": "^2.0.1",
+    "@gov.au/direction-links": "^2.0.1",
+    "@gov.au/footer": "^2.0.1",
+    "@gov.au/grid-12": "^2.0.1",
+    "@gov.au/header": "^4.1.3",
+    "@gov.au/headings": "^2.0.1",
+    "@gov.au/inpage-nav": "^2.0.1",
+    "@gov.au/keyword-list": "^2.0.1",
+    "@gov.au/link-list": "^2.0.1",
+    "@gov.au/page-alerts": "^2.0.1",
+    "@gov.au/responsive-media": "^2.0.4",
+    "@gov.au/select": "^2.0.1",
+    "@gov.au/skip-link": "^2.0.2",
+    "@gov.au/tags": "^3.1.2",
+    "@gov.au/text-inputs": "^2.0.2",
+    "pancake": "^3.4.1"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "//": "The postinstall script is needed to work-around this Drupal core bug: https://www.drupal.org/node/2329453",
+  "scripts": {
+    "dev": "npm run development",
+    "development": "gulp dev",
+    "prod": "npm run production",
+    "production": "gulp prod",
+    "watch": "gulp watch",
+    "browser-sync": "browser-sync",
+    "postinstall": "find node_modules/ -name '*.info' -type f -delete",
+    "pancake": "node node_modules/@gov.au/pancake/bin/pancake"
+  },
+  "pancake": {
+    "auto-save": true,
+    "plugins": true,
+    "ignore": [],
+    "css": {
+      "minified": true,
+      "modules": false,
+      "browsers": [
+        "last 2 versions",
+        "ie 8",
+        "ie 9",
+        "ie 10"
+      ],
+      "location": "css/",
+      "name": false
+    },
+    "sass": {
+      "modules": false,
+      "location": "src/sass/vendors/",
+      "name": "uikit.scss"
+    },
+    "js": {
+      "minified": true,
+      "modules": false,
+      "location": "pancake/js/",
+      "name": "pancake.js"
+    },
+    "react": {
+      "location": "pancake/react/"
+    },
+    "json": {
+      "enable": false,
+      "location": "pancake/",
+      "name": "pancake",
+      "content": {
+        "name": true,
+        "version": true,
+        "dependencies": true,
+        "path": true,
+        "settings": true
+      }
+    }
+  }
+}

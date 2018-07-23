@@ -1,0 +1,1 @@
+!function(n,t,i,u,c){"use strict";t.behaviors.govkit={attach:function(t,i){n(u).ready(function(){})}}}(jQuery,Drupal,0,this.document);
