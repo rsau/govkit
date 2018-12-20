@@ -1,374 +1,202 @@
 'use strict';
 
-// *************************
-//
-// Run 'gulp' to watch directory for changes for images, fonts icons, Sass, etc.
-// Or for full site testing run 'gulp test'
-//
-// *************************
-
-
 // Include gulp.
 const gulp = require('gulp');
+const config = require('./config.json');
 
-// Include plug-ins.
-const jshint                = require('gulp-jshint');
-const imagemin              = require('gulp-imagemin');
-const cleanCSS              = require('gulp-clean-css');
-const concat                = require('gulp-concat');
-const del                   = require('del');
-const uglify                = require('gulp-uglify');
-const iconfont              = require('gulp-iconfont');
-const iconfontCss           = require('gulp-iconfont-css');
-const iconfontTemplate      = require('gulp-iconfont-template');
-const groupMediaQueries     = require('gulp-group-css-media-queries');
-const extractMediaQueries   = require('gulp-extract-media-queries');
-const gulpLoadPlugins       = require('gulp-load-plugins');
-const pa11y                 = require('gulp-pa11y');
-const w3cValidation         = require('gulp-w3c-html-validation');
-const casperJs              = require('gulp-casperjs');
-const realFavicon           = require('gulp-real-favicon');
-const fs                    = require('fs'); // Used by check-for-favicon-update.
-const plumber               = require('gulp-plumber'); // For error handling.
-const gutil                 = require('gulp-util'); // For error handling.
-const postcss               = require('gulp-postcss');
-const cssNano               = require('cssnano');
-const atImport              = require('postcss-import');
-const runSequence           = require('run-sequence');
-const modernizr             = require('gulp-modernizr');
+// Include plugins.
+const sass = require('gulp-sass');
+const imagemin = require('gulp-imagemin');
+const plumber = require('gulp-plumber');
+const glob = require('gulp-sass-glob');
+const uglify = require('gulp-uglify');
+const concat = require('gulp-concat');
+const notify = require('gulp-notify');
+const rename = require('gulp-rename');
+const sourcemaps = require('gulp-sourcemaps');
+const jshint = require('gulp-jshint');
+const postcss = require('gulp-postcss');
+const autoprefixer = require('autoprefixer');
+const del = require('del');
+const browserSync = require('browser-sync').create();
 
-// Project vars
-// URL to test locally.
-const localSiteURL = 'http://localhost:3000/';
-// Name of the icon font.
-const fontName = 'govstrap-icons';
-// Favicon related settings.
-const faviconColour = '#ffffff';
-const faviconBackgroundColour = '#384249';
+// Check if local config exists.
+var fs = require('fs');
+if (!fs.existsSync('./config-local.json')) {
+  console.log('\x1b[33m', 'You need to rename default.config-local.json to' +
+    ' config-local.json and update its content if necessary.', '\x1b[0m');
+  process.exit();
+}
+//Include local config.
+var configLocal = require('./config-local.json');
 
-var options = {};
+// Process CSS for production.
+gulp.task('css', function() {
+  var postcssPlugins = [
+    autoprefixer('last 2 versions', '> 1%', 'ie 10')
+  ];
 
-options.rootPath = {
-  project     : __dirname + '/',
-  styleGuide  : __dirname + '/styleguide/',
-  theme       : __dirname + '/'
-};
-
-options.theme = {
-  root    : options.rootPath.theme,
-  css     : options.rootPath.theme + 'css/',
-  sass    : options.rootPath.theme + 'src/sass/',
-  jsSrc   : options.rootPath.theme + 'src/js/',
-  js      : options.rootPath.theme + 'js/',
-  src     : options.rootPath.theme + 'src/'
-};
-
-var sassFiles = [
-  options.theme.sass + '**/*.scss',
-  // Do not open Sass partials as they will be included as needed.
-  '!' + options.theme.sass + '**/_*.scss',
-  // Hide additional files
-  '!' + options.theme.sass + 'vendors/uikit.scss'
-];
-
-var $ = gulpLoadPlugins();
-
-// ********************************************************************************************************************************************
-
-// Error Handling to stop file watching from dying on an error (ie: Sass compiling).
-var onError = function(err) {
-  gutil.beep();
-  console.log(err);
-};
-
-// Clean CSS files.
-gulp.task('clean:css', function() {
-  return del([
-    options.theme.css + '**/*.css',
-    options.theme.css + '**/*.map',
-    '!' + options.theme.css + 'print.css'
-  ], {force: true});
-});
-
-// Clean JS files.
-gulp.task('clean:js', function() {
-  return del([
-    options.theme.js + 'dist/*.js',
-  ], {force: true});
-});
-
-/**
- * Generate css with source map.
- */
-gulp.task('styles:generate:dev', function(){
-  return gulp.src(sassFiles)
-    .pipe($.sourcemaps.init())
-    .pipe($.sass({
-      sourcemap: true,
-      precision: 10
-    }).on('error', $.sass.logError))
-    .pipe($.sourcemaps.write('./'))
-    .pipe($.size({title: 'Styles'}))
-    .pipe(gulp.dest(options.theme.css));
-});
-
-/**
- * Generate css without source map.
- */
-gulp.task('styles:generate:prod', function(){
-  return gulp.src(sassFiles)
-    .pipe($.sass({
-      precision: 10,
-      sourcemap: false
-    }).on('error', $.sass.logError))
-    .pipe($.size({title: 'Styles (prod)'}))
-    .pipe(gulp.dest(options.theme.css));
-});
-
-/**
- * Compress css.
- */
-gulp.task('css:compress', function(){
-  return gulp.src(options.theme.css + '/*.css')
-    .pipe(cleanCSS({compatibility: 'ie10'}))
-    .pipe(gulp.dest(options.theme.css));
-});
-
-/**
- * Break a css into separate files for each break point.
- */
-gulp.task('css:break-at-media', function() {
-  return gulp.src(options.theme.css + '/styles.css')
-    .pipe(extractMediaQueries())
-    .pipe(groupMediaQueries())
-    .pipe(gulp.dest(options.theme.css));
-});
-
-/**
- * Generate styles: source map = on, compression = off.
- */
-gulp.task('styles:dev', function(callback) {
-  runSequence(
-    'clean:css',
-    'styles:generate:dev',
-    'css:break-at-media',
-    callback);
-});
-
-/**
- * Generate JS
- */
-gulp.task('js:build', function(callback) {
-  runSequence(
-    'clean:js',
-    'js:minify',
-    callback);
-});
-
-/**
- * Compress JS.
- */
-
-gulp.task('js:minify', function() {
-  gulp.src(options.theme.jsSrc + '*.js')
+  return gulp.src(config.css.src)
+    .pipe(glob())
     .pipe(plumber({
-      errorHandler: onError
+      errorHandler: function (error) {
+        notify.onError({
+          title:    "Gulp",
+          subtitle: "Failure!",
+          message:  "Error: <%= error.message %>"
+        }) (error);
+        this.emit('end');
+      }}))
+    .pipe(sass({
+      outputStyle: 'compressed',
+      errLogToConsole: true
     }))
+    .pipe(postcss(postcssPlugins))
+    .pipe(gulp.dest(config.css.dest))
+});
+
+// Process CSS for development.
+gulp.task('css_dev', function() {
+  var postcssPlugins = [
+    autoprefixer('last 2 versions', '> 1%', 'ie 10')
+  ];
+
+  return gulp.src(config.css.src)
+    .pipe(glob())
+    .pipe(plumber({
+      errorHandler: function (error) {
+        notify.onError({
+          title:    "Gulp",
+          subtitle: "Failure!",
+          message:  "Error: <%= error.message %>"
+        }) (error);
+        this.emit('end');
+      }}))
+    .pipe(sourcemaps.init())
+    .pipe(sass({
+      outputStyle: 'nested',
+      errLogToConsole: true
+    }))
+    .pipe(postcss(postcssPlugins))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest(config.css.dest))
+    .pipe(browserSync.reload({ stream: true, match: '**/*.css' }));
+});
+
+// Compress images.
+gulp.task('images', function () {
+  return gulp.src(config.images.src)
+    .pipe(imagemin([
+      imagemin.gifsicle({interlaced: true}),
+      imagemin.jpegtran({progressive: true}),
+      imagemin.optipng({optimizationLevel: 5}),
+      imagemin.svgo({
+        plugins: [
+          {removeViewBox: false},
+          {cleanupIDs: false}
+        ]
+      })
+    ]))
+    .pipe(gulp.dest(config.images.dest));
+});
+
+// Concat all JS files into one file and minify it.
+gulp.task('scripts', function() {
+  return gulp.src(config.js.src)
+    .pipe(plumber({
+      errorHandler: function (error) {
+        notify.onError({
+          title: 'Gulp scripts processing',
+          subtitle: 'Failure!',
+          message: 'Error: <%= error.message %>'
+        })(error);
+        this.emit('end');
+      }}))
+    .pipe(concat('./index.js'))
+    .pipe(gulp.dest('./assets/scripts/'))
+    .pipe(rename(config.js.file))
     .pipe(uglify())
-    .pipe(gulp.dest(options.theme.js))
+    .pipe(gulp.dest(config.js.dest));
 });
 
-/**
- * Generate styles: source map = off, compression = on.
- */
-gulp.task('styles:prod', function(callback) {
-  runSequence(
-    'clean:css',
-    'styles:generate:prod',
-    'css:break-at-media',
-    'css:compress',
-    callback);
+// Concat all JS files into one file.
+gulp.task('scripts_dev', function() {
+  return gulp.src(config.js.src)
+    .pipe(plumber({
+      errorHandler: function (error) {
+        notify.onError({
+          title: 'Gulp scripts processing',
+          subtitle: 'Failure!',
+          message: 'Error: <%= error.message %>'
+        })(error);
+        this.emit('end');
+      }}))
+    .pipe(concat('./index.js'))
+    .pipe(gulp.dest('./assets/scripts/'))
+    .pipe(sourcemaps.init())
+    .pipe(rename(config.js.file))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest(config.js.dest))
+    .pipe(browserSync.reload({ stream: true, match: '**/*.js' }))
+    .pipe(notify({message: 'Rebuild all custom scripts. Please refresh your browser', onLast: true}));
 });
 
-/**
- * Modernizr
- */
-gulp.task('modernizr', function() {
-  gulp.src(options.theme.css + 'js/*.js')
-    .pipe(modernizr())
-    .pipe(gulp.dest('./js/'))
-});
-
-
-/**
- * Optimise favicons
- */
-gulp.task('favicons', function() {
-  return gulp.src(options.theme.css + 'favicon/favicons/**/*')
-    .pipe(imagemin({
-      optimizationLevel: 3
-    }))
-    .pipe(gulp.dest('./favicons'))
-});
-
-
-/**
- * Optimise images
- */
-gulp.task('images', function() {
-  return gulp.src(options.theme.css + 'img/**/*')
-    .pipe(imagemin({
-      optimizationLevel: 3,
-      progressive: true,
-      interlaced: true,
-    }))
-    .pipe(gulp.dest('./img'))
+// Move all UI-Kit JS files into final destination and minify them.
+gulp.task('scripts_uikit', function() {
+  return gulp.src(config.uikit_js.src)
+    .pipe(plumber({
+      errorHandler: function (error) {
+        notify.onError({
+          title: 'Gulp scripts processing',
+          subtitle: 'Failure!',
+          message: 'Error: <%= error.message %>'
+        })(error);
+        this.emit('end');
+      }}))
+    .pipe(uglify())
+    .pipe(gulp.dest(config.uikit_js.dest));
 });
 
 
-// SVG files to a font file.
-gulp.task('iconFont', function() {
-  var runTimestamp = Math.round(Date.now() / 1000);
-  return gulp.src([options.theme.css + 'font-icons/**'])
-    .pipe(iconfontCss({
-      fontName: fontName,
-      path: 'scss',
-      targetPath: options.theme.css + 'sass/_' + fontName + '.scss', // Relative to the path used in gulp.dest()
-      fontPath: '/fonts/' // Relative to the site.
-    }))
-    .pipe(iconfont({
-      fontName: fontName, // Required.
-      prependUnicode: true, // Recommended option.
-      formats: ['ttf', 'eot', 'woff', 'woff2'], // Default, 'woff2' and 'svg' are available.
-      timestamp: runTimestamp, // Recommended to get consistent builds when watching files.
-      normalize: true, // The provided icons does not have the same height it could lead to unexpected results. Using the normalize option could solve the problem.
-      fontHeight: 1001, // Stops the SVG being redrawn like a 3yo did them.. (https://github.com/nfroidure/gulp-iconfont/issues/138)
-    }))
-    .pipe(gulp.dest('./fonts/'));
+// Remove temporary JS storage.
+gulp.task('removeTemporaryStorage', function() {
+  return del('./assets/scripts/');
 });
 
-
-// Favicons creation
-var faviconDataFile = options.theme.css + 'favicon/faviconData.json';
-// Generate the icons. This task takes a few seconds to complete.
-// You should run it at least once to create the icons. Then,
-// you should run it whenever RealFaviconGenerator updates its
-// package (see the check-for-favicon-update task below).
-gulp.task('favicon', function(done) {
-  realFavicon.generateFavicon({
-    masterPicture: options.theme.css + 'master-favicon.svg',
-    dest: options.theme.css + 'favicon/favicons',
-    iconsPath: '/favicons/',
-    design: {
-      ios: {
-        pictureAspect: 'noChange',
-        assets: {
-          ios6AndPriorIcons: false,
-          ios7AndLaterIcons: false,
-          precomposedIcons: false,
-          declareOnlyDefaultIcon: true
-        }
-      },
-      desktopBrowser: {},
-      windows: {
-        pictureAspect: 'noChange',
-        backgroundColor: faviconBackgroundColour,
-        onConflict: 'override',
-        assets: {
-          windows80Ie10Tile: false,
-          windows10Ie11EdgeTiles: {
-            small: false,
-            medium: true,
-            big: false,
-            rectangle: false
-          }
-        }
-      },
-      androidChrome: {
-        pictureAspect: 'noChange',
-        themeColor: faviconColour,
-        manifest: {
-          display: 'standalone',
-          orientation: 'notSet',
-          onConflict: 'override',
-          declared: true
-        },
-        assets: {
-          legacyIcon: false,
-          lowResolutionIcons: false
-        }
-      },
-      safariPinnedTab: {
-        pictureAspect: 'silhouette',
-        themeColor: faviconColour
-      }
-    },
-    settings: {
-      scalingAlgorithm: 'Mitchell',
-      errorOnImageTooSmall: true
-    },
-    markupFile: faviconDataFile
-  }, function() {
-    done();
-  });
+// Remove sourcemaps.
+gulp.task('removeSourceMaps', function() {
+  return del(['./css/style.css.map', './js/script.js.map']);
 });
-// Inject the favicon markups in your HTML pages. You should run
-// this task whenever you modify a page. You can keep this task
-// as is or refactor your existing HTML pipeline.
-// gulp.task('inject-favicon-markups', function() {
-// 	return gulp.src([ 'TODO: List of the HTML files where to inject favicon markups' ])
-// 		.pipe(realFavicon.injectFaviconMarkups(JSON.parse(fs.readFileSync(faviconDataFile)).favicon.html_code))
-// 		.pipe(gulp.dest('TODO: Path to the directory where to store the HTML files'));
-// });
-// Check for updates on RealFaviconGenerator
-// (ie: If Apple has just released a new Touch icon along with the latest version of iOS).
-// Run this task from time to time. Ideally, make it part of your CI.
-gulp.task('check-for-favicon-update', function(done) {
-  var currentVersion = JSON.parse(fs.readFileSync(faviconDataFile)).version;
-  realFavicon.checkForUpdates(currentVersion, function(err) {
-    if (err) {
-      throw err;
-    }
+
+// Watch task.
+gulp.task('watch', function() {
+  gulp.watch(config.css.src, { usePolling: true }, gulp.series('css_dev'));
+  gulp.watch(config.js.src, { usePolling: true }, gulp.series('scripts_dev', 'removeTemporaryStorage'));
+});
+
+// JS Linting.
+gulp.task('js-lint', function() {
+  return gulp.src(config.js.src)
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
+});
+
+// BrowserSync settings.
+gulp.task('browserSync', function() {
+  browserSync.init({
+    proxy: configLocal.browserSyncProxy,
+    port: configLocal.browserSyncPort,
   });
 });
 
-// Clean all directories.
-gulp.task('clean', ['clean:css', 'clean:js']);
+// Compile for production.
+gulp.task('serve', gulp.parallel('css', gulp.series('scripts', 'removeTemporaryStorage'), 'scripts_uikit' , 'images', 'removeSourceMaps'));
 
-// ********************************************************************************************************************************************
+// Compile for development + BrowserSync + Watch
+gulp.task('serve_dev', gulp.series(gulp.parallel('css_dev', gulp.series('scripts_dev', 'removeTemporaryStorage')), 'scripts_uikit' , gulp.parallel('watch', 'browserSync')));
 
+// Default Task
+gulp.task('default', gulp.series('serve'));
 
-// Default gulp task.
-gulp.task('default', ['clean', 'images', 'modernizr', 'styles:dev', 'js:build']);
-
-// Development gulp task, kinda same as default
-gulp.task('dev', ['clean', 'images', 'modernizr', 'styles:dev', 'js:build']);
-
-// Production gulp task.
-gulp.task('prod', ['clean', 'images', 'modernizr', 'styles:prod', 'js:build']);
-
-// Watch changes.
-gulp.task('watch', ['images', 'modernizr'], function() {
-  // Watch for govkit Sass changes.
-  gulp.watch([options.theme.sass + 'themes/govkit/*.scss'], ['styles:dev']);
-  // Watch for partials Sass changes.
-  gulp.watch([options.theme.sass + 'partials/*.scss'], ['styles:dev']);
-  // Watch for JS changes.
-  gulp.watch([options.theme.jsSrc + '*.js'], ['js:build']);
-  // Watch for img optim changes.
-  gulp.watch('./src/img/**', function() {
-    gulp.start('images');
-  });
-  // Watch for font icon changes.
-  gulp.watch('./src/font-icons/**', function() {
-    gulp.start('iconFont');
-  });
-  // Watch for master Favicon changes.
-  gulp.watch('./src/favicon/master-favicon.svg', function() {
-    gulp.start('favicon');
-  });
-  // Once the favicons are built, create an optimised copy to use.
-  gulp.watch('./src/favicon/favicons/**', function() {
-    gulp.start('favicons');
-  });
-});
+// Development Task
+gulp.task('dev', gulp.series('serve_dev'));

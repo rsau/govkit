@@ -1,0 +1,23 @@
+.au-header.au-header--dark {
+  background-color: $colour_grey_light;
+  padding-bottom: 0;
+}
+
+#crest {
+  img {
+    height: auto;
+    margin: 0 0 3rem;
+    float: none;
+    width: 150px;
+
+    @include AU-media( sm ) {
+      width: 150px;
+      height: 73px;
+    }
+  }
+
+  &:hover {
+    color: $colour_white;
+    text-decoration-color: $colour_white;
+  }
+}

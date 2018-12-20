@@ -1,6 +1,6 @@
 screenshot  = screenshot.png
 name        = govKit
-description = A light-weight UI Kit 2 based theme derived from govkit
+description = Light-weight Drupal 7 theme base on the Australian Government Design System
 
 core        = 7.x
 
@@ -42,15 +42,14 @@ settings[govkit_rebuild_registry] = 0
 ;; Javascript.
 ;;;;;;;;;;;;;;;;;;;;;
 
-scripts[] = js/jquery-ui.min.js
-scripts[] = js/scripts.js
+scripts[] = js/uikit.min.js
+scripts[] = js/script.js
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Stylesheet.
 ;;;;;;;;;;;;;;;;;;;;;
 
 stylesheets[all][] = css/styles.css
-stylesheets[print][] = css/print.css
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Excludes

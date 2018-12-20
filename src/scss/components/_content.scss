@@ -1,0 +1,23 @@
+body {
+  @include font-normal;
+  margin: 0;
+  color: #000;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @include font-normal;
+}
+
+.content {
+  margin-bottom: 2rem;
+}
+
+.main-container {
+  overflow: hidden;
+  padding-top: 1rem;
+
+  .au-cta-link {
+    font-size: 1rem;
+  }
+
+}

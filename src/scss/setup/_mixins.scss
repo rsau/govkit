@@ -1,0 +1,7 @@
+@mixin media-only( $breakpoint ) {
+  @if( $breakpoint == "xs" ) {
+    @media (max-width: $AU-media-sm - 1) {
+      @content;
+    }
+  }
+}

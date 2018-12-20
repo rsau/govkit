@@ -1,0 +1,31 @@
+.au-footer {
+  padding: 3rem 0 3rem;
+  border-top: none;
+  position: relative;
+
+  .to-top {
+    position: absolute;
+    right: 5%;
+    top: -32px;
+
+    .to-top-link {
+      background: $colour_grey_lighter;
+      height: 64px;
+      width: 64px;
+      display: block;
+      border-radius: 32px;
+      text-align: center;
+
+      &:hover {
+        background: $colour_grey_light;
+      }
+    }
+  }
+}
+
+.footer {
+  ul.menu {
+    @extend .au-link-list;
+    @extend .au-link-list--inline;
+  }
+}
