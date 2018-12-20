@@ -1,0 +1,30 @@
+{
+  "name": "govkit",
+  "description": "a govCMS Drupal 7 theme based on the DTA UI Kit.",
+  "css": {
+    "file" : "style.scss",
+    "src": [
+      "./src/scss/**/*.scss"
+    ],
+    "dest": "css"
+  },
+  "js": {
+    "file" : "script.js",
+    "src": [
+      "./src/js/**/*.js"
+    ],
+    "dest": "js"
+  },
+  "uikit_js": {
+    "src": [
+      "./src/uikit/js/*.js"
+    ],
+    "dest": "js"
+  },
+  "images": {
+    "src": [
+      "./src/images/**/*"
+    ],
+    "dest": "images"
+  }
+}

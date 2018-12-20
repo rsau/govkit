@@ -1,0 +1,9 @@
+{
+  "name": "govKit",
+  "description": "govKit local config file for browserSync",
+  "_comment": "copy and change this file to config-local.json",
+  "_comment": "browserSyncProxy and browserSyncPort are how your Drupal site is normally accessed without browserSync",
+  "_comment": "browserSync will proxy to this site and automatically reload the page when assets it's watching changed",
+  "browserSyncProxy" : "http://myawesomesite.local/",
+  "browserSyncPort" : 80
+}
