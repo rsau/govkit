@@ -1,6 +1,6 @@
 # govKit - a light-weight Drupal 7 theme base on the Australian Government Design System
 
-https://designsystem.gov.au/
+More about the Deisgn System: https://designsystem.gov.au/
 
 ## Getting started
 1. Run `npm install`. This may take a while and if it stalls, delete the `node_modules` directory and start over
@@ -23,7 +23,7 @@ Those can be changed to your liking by editing `config.json`. All source files w
 
 From the theme directory, run `gulp`
 
-**It does the following:**
+**This does the following:**
 * compile SCSS and JS source files
 * optimise image source files
 * compress CSS
@@ -31,11 +31,11 @@ From the theme directory, run `gulp`
 
 You may choose to enable/disable image optimisation by editing `gulpfile.js`. If task `images` is enabled, the task may take a while to run, please be patient.
 
-### Development
+### Local development
 
 From the theme directory, run `gulp dev`
 
-**It does the following:**
+**This does the following:**
 * source mapping for both SCSS and JS
 * watch for SCSS and JS source file changes
 * compile SCSS into CSS nested style
