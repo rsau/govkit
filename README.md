@@ -1,14 +1,48 @@
-# govKit - a light-weight Drupal 7 theme base on the Australian Government Design System
+# govKit - a lightweight Drupal 7 theme base on the GOV.AU UI-Kit
 
-More about the Deisgn System: https://designsystem.gov.au/
+<p align="center"><img src="./screenshot.png" alt="govKit logo"/></p>
 
-## Getting started
+* About the GOV.AU UI-Kit: https://github.com/govau/uikit
+* About the Australian Government Deisgn System: https://designsystem.gov.au
+
+## Table of contents
+
+- [Quick start](#quick-start)
+- [Source files](#source-files)
+- [Commands](#commands)
+- [License](#license)
+
+
+## Quick start
 1. Run `npm install`. This may take a while and if it stalls, delete the `node_modules` directory and start over
 2. Copy `config-local-example.json` to `config-local.json` and change the browserSync proxy to your local development URL
 
 ## Source files
 
-Default source file directories are
+Default source file directories are under `src`. 
+
+```text
+govkit/
+├── images/
+├── css/
+│   └── style.css
+├── js/
+│   └── script.js   
+└── src/
+    ├── images/
+    ├── js/
+    │   └── script.js  
+    ├── scss/    
+    │   ├── style.scss   
+    │   ├── components/*.scss  
+    │   ├── layouts/*.scss
+    │   └── setup/*.scss
+    └── uikit/
+        ├── css/
+        ├── js/
+        ├── react/
+        └── scss/
+```
 
 * SCSS source files `src/scss`
 * JS source files `src/js`
@@ -17,7 +51,7 @@ Default source file directories are
 
 Those can be changed to your liking by editing `config.json`. All source files with `.js` and `.scss` extensions under their respective directory will be compiled. This may not be desirable if you would like to control the order the SCSS files are included. Edit `config.json` accordingly if you would like to specify the include order of the source files.
 
-## Tasks
+## Commands
 
 ### Production deployment
 
@@ -46,3 +80,5 @@ From the theme directory, run `gulp dev`
 
 From the theme directory, run `gulp js-lint`
 
+## License
+Copyright (c) Icon Agency Canberra, Licensed under ISC.

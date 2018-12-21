@@ -5,5 +5,5 @@
     <?php if (!empty($page['footer'])): ?>
         <?php print render($page['footer']); ?>
     <?php endif; ?>
-    <div class="sr-only">Designed and built by <a href="https://iconagency.com.au/canberra" target="_blank">Icon Agency Canberra</a>.</div>
+    <div class="sr-only">By <a href="https://iconagency.com.au/canberra" target="_blank">Icon Agency Canberra</a>.</div>
 </footer>

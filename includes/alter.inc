@@ -69,15 +69,23 @@ function govkit_js_callback_filter_xss_alter(array &$allowed_tags = array()) {
 }
 
 /**
- * Search block form alter.
+ * Implements theme_form_alter().
  */
 function govkit_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'search_form') {
+    $form['basic']['submit']['#attributes']['class'][] = 'au-btn';
+    $form['basic']['keys']['#title'] = '';
+    $form['basic']['keys']['#attributes']['class'][] = 'au-text-input';
+  }
+
   if ($form_id == 'search_block_form') {
     // Update search keys filed attributes.
     $form['search_block_form']['#attributes']['title'] = 'Search';
-    $form['search_block_form']['#attributes']['placeholder'] = t('Search');
+    $form['search_block_form']['#attributes']['placeholder'] = t('Enter keywords');
     $form['search_block_form']['#attributes']['autocomplete'] = 'off';
+    $form['search_block_form']['#attributes']['class'][] = 'au-text-input';
     // Update submit button style.
-    $form['actions']['submit']['#value'] = decode_entities('') . ' Search';
+    $form['actions']['submit']['#value'] = 'Search';
+    $form['actions']['submit']['#attributes']['class'] = ['au-btn', 'au-btn--secondary'];
   }
 }
