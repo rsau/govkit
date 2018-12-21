@@ -1,6 +1,7 @@
 # govKit - a lightweight Drupal 7 theme base on the GOV.AU UI-Kit
 
 <p align="center"><img src="./screenshot.png" alt="govKit logo"/></p>
+<p align="center"><strong>Support the KitKat by forking and expanding it!</strong></p>
 
 * About the GOV.AU UI-Kit: https://github.com/govau/uikit
 * About the Australian Government Deisgn System: https://designsystem.gov.au
