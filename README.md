@@ -81,4 +81,4 @@ From the theme directory, run `gulp dev`
 From the theme directory, run `gulp js-lint`
 
 ## License
-Copyright (c) Icon Agency Canberra, Licensed under ISC.
+Copyright &copy; Icon Agency Canberra. Licensed under ISC.
