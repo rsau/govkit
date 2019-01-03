@@ -49,7 +49,7 @@ scripts[] = js/script.js
 ;; Stylesheet.
 ;;;;;;;;;;;;;;;;;;;;;
 
-stylesheets[all][] = css/styles.css
+stylesheets[all][] = css/style.css
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Excludes
